@@ -55,9 +55,9 @@
       // }, 1000)
 
       // 增加loading time
-      // setTimeout(() => {
+      setTimeout(() => {
         this._getDiscList()
-      // }, 1000)
+      }, 1000)
     },
     methods: {
       _getRecommend() {
