@@ -47,7 +47,7 @@
 				list.forEach((item, index) => {
 					// 查看Singer的constructor是否是一个{}
 					if (index === 1) {
-						console.log(new Singer(item.Fsinger_mid, item.Fsinger_name))
+						// console.log(new Singer(item.Fsinger_mid, item.Fsinger_name))
 					}
 					if (index < HOT_SINGER_LEN) {
 						map.hot.items.push(new Singer(item.Fsinger_mid, item.Fsinger_name))
@@ -61,7 +61,7 @@
 					}
 					map[key].items.push(new Singer(item.Fsinger_mid, item.Fsinger_name))
 				})
-				console.log(map)
+				// console.log(map)
 
 				// 为了得到有序列表，需要序列化map
 				let hot = []
