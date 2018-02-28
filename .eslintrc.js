@@ -29,6 +29,7 @@ module.exports = {
     'space-before-function-paren': 0,
     "indent": ["error", "tab"],
     "no-tabs": 0,
-    "indent": 0
+    "indent": 0,
+    "no-mixed-spaces-and-tabs": 0
   }
 }
