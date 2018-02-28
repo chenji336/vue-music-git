@@ -1,3 +1,9 @@
+import {getVKey} from 'api/song'
+import { getUid } from './uid'
+import { ERR_OK } from 'api/config'
+
+let urlMap = {}
+
 export default class Song {
   constructor({id, mid, singer, name, album, duration, image, url}) {
     this.id = id
@@ -7,7 +13,27 @@ export default class Song {
     this.album = album
     this.duration = duration
     this.image = image
-    this.url = url
+    this.filename = `C400${this.mid}.m4a`
+    // this.url = url // 这个获取的时候403 forbidden
+    // 确保一首歌曲的 id 只对应一个 url
+    if (urlMap[this.id]) {
+      this.url = urlMap[this.id]
+    } else {
+      this._genUrl()
+    }
+  }
+
+  _genUrl() {
+    if (this.url) {
+      return
+    }
+    getVKey(this.mid, this.filename).then((res) => {
+      if (res.code === ERR_OK) {
+        const vkey = res.data.items[0].vkey
+        this.url = `http://dl.stream.qqmusic.qq.com/${this.filename}?vkey=${vkey}&guid=${getUid()}&uin=0&fromtag=66`
+        urlMap[this.id] = this.url
+      }
+    })
   }
 }
 
