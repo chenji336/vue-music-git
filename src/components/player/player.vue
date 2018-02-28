@@ -1,5 +1,5 @@
 <template>
-	<div class='player' v-if='playlist.length>0'>
+	<div class='player' v-show='playlist.length>0'>
     <transition name='normal'
                 @enter='enter'
                 @after-enter='afterEnter'
@@ -78,6 +78,9 @@
   const transform = prefixStyle('transform')
 
 	export default {
+    created() {
+      console.log('player:', this.currentSong)
+    },
 		computed: {
       cdCls() {
         return this.playing ? 'play' : 'play pause'
@@ -120,6 +123,7 @@
         this.setPlayingState(!this.playing)
       },
       enter(el, done) {
+        console.log(this._getPosAndScale())
         let {x, y, scale} = this._getPosAndScale()
         let animation = {
           0: {
