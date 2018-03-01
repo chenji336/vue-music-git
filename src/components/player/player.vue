@@ -27,6 +27,13 @@
           </div>
         </div>
         <div class='bottom'>
+          <div class='progress-wrapper'>
+            <span class='time time-l'>{{format(currentTime)}}</span>
+            <div class='progress-bar-wrapper'>
+              <progress-bar :percent='percent'></progress-bar>
+            </div>
+            <span class='time time-r'>{{format(currentSong.duration)}}</span>
+          </div>
           <div class='operators'>
             <div class='icon i-left'>
               <i class='icon-sequence'></i>
@@ -66,13 +73,14 @@
         </div>
       </div>
     </transition>
-    <audio ref='audio' :src='currentSong.url' @playing='ready' @error='error'></audio>
+    <audio ref='audio' :src='currentSong.url' @playing='ready' @error='error' @timeupdate='updateTime'></audio>
 	</div>
 </template>
 
 <script type='text/ecmascript-6'>
 	import {mapGetters, mapMutations} from 'vuex'
   import animations from 'create-keyframe-animation'
+  import ProgressBar from 'base/progress-bar/progress-bar'
 
   import {prefixStyle} from 'common/js/dom'
   const transform = prefixStyle('transform')
@@ -80,7 +88,8 @@
 	export default {
     data() {
       return {
-        songReady: false
+        songReady: false,
+        currentTime: 0
       }
     },
     created() {
@@ -98,6 +107,9 @@
       },
       disableCls() {
         return this.songReady ? '' : 'disable'
+      },
+      percent() {
+        return this.currentTime / this.currentSong.duration
       },
 			...mapGetters([
         'playlist',
@@ -134,6 +146,22 @@
           return
         }
         this.setPlayingState(!this.playing)
+      },
+      updateTime(e) {
+        this.currentTime = e.target.currentTime
+      },
+      format(interval) {
+        let minute = (interval / 60) | 0
+        let second = this._pad((interval % 60) | 0)
+        return `${minute}:${second}`
+      },
+      _pad(num, n = 2) {
+        let len = num.toString().length
+        while (len < n) {
+          num = '0' + num
+          len++
+        }
+        return num
       },
       prev() {
         if (!this.songReady) {
@@ -229,6 +257,9 @@
         setPlayingState: 'SET_PLAYING_STATE',
         setCurrentIndex: 'SET_CURRENT_INDEX'
       })
+    },
+    components: {
+      ProgressBar
     }
 	}
 </script>
