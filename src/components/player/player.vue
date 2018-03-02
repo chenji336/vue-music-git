@@ -36,7 +36,7 @@
           </div>
           <div class='operators'>
             <div class='icon i-left'>
-              <i class='icon-sequence'></i>
+              <i :class='iconMode' @click='changeMode'></i>
             </div>
             <div class='icon i-left' :class='disableCls'>
               <i @click='prev' class='icon-prev'></i>
@@ -84,6 +84,8 @@
   import animations from 'create-keyframe-animation'
   import ProgressBar from 'base/progress-bar/progress-bar'
   import ProgressCircle from 'base/progress-circle/progress-circle'
+  import {playMode} from 'common/js/config'
+  import {shuffle} from 'common/js/util'
 
   import {prefixStyle} from 'common/js/dom'
   const transform = prefixStyle('transform')
@@ -109,6 +111,10 @@
       miniIcon() {
         return this.playing ? 'icon-pause-mini' : 'icon-play-mini'
       },
+      iconMode() {
+        return this.mode === playMode.sequence ? 'icon-sequence'
+             : this.mode === playMode.loop ? 'icon-loop' : 'icon-random'
+      },
       disableCls() {
         return this.songReady ? '' : 'disable'
       },
@@ -120,11 +126,16 @@
         'fullScreen',
         'currentSong',
         'playing',
-        'currentIndex'
+        'currentIndex',
+        'mode',
+        'sequenceList'
       ])
 		},
     watch: {
-      currentSong() {
+      currentSong(newSong, oldSong) {
+        if (newSong.id === oldSong.id) {
+          return
+        }
         this.$nextTick(() => {
           console.log('this.currentSong.url:', this.currentSong.url)
           this.$refs.audio.play()
@@ -160,6 +171,28 @@
       },
       updateTime(e) {
         this.currentTime = e.target.currentTime
+      },
+      changeMode() {
+        let mode = (this.mode + 1) % 3
+        this.setPlayMode(mode)
+
+        let list = []
+
+        if (mode === playMode.random) {
+          list = shuffle(this.sequenceList)
+          console.log('list:', list)
+        } else {
+          list = this.sequenceList
+        }
+
+        this.resetCurrentIndex(list)
+      },
+      resetCurrentIndex(list) {
+        let index = list.findIndex((item) => {
+          console.log('item:', item)
+          return item.id === this.currentSong.id
+        })
+        this.setCurrentIndex(index)
       },
       format(interval) {
         let minute = (interval / 60) | 0
@@ -272,7 +305,8 @@
       ...mapMutations({
         setFullScreen: 'SET_FULL_SCREEN',
         setPlayingState: 'SET_PLAYING_STATE',
-        setCurrentIndex: 'SET_CURRENT_INDEX'
+        setCurrentIndex: 'SET_CURRENT_INDEX',
+        setPlayMode: 'SET_PLAY_MODE'
       })
     },
     components: {
