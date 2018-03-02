@@ -30,7 +30,7 @@
           <div class='progress-wrapper'>
             <span class='time time-l'>{{format(currentTime)}}</span>
             <div class='progress-bar-wrapper'>
-              <progress-bar :percent='percent'></progress-bar>
+              <progress-bar :percent='percent' @percentChange='onProgressBarChange' ref='progressBar'></progress-bar>
             </div>
             <span class='time time-r'>{{format(currentSong.duration)}}</span>
           </div>
@@ -65,8 +65,10 @@
           <p class='desc' v-html='currentSong.singer'></p>
         </div>
         <div class='control'>
-          <i :class='miniIcon' @click.stop='togglePlaying'>
-          </i>
+          <progress-circle :radius='radius' :percent='percent'>
+            <i class='icon-mini' :class='miniIcon' @click.stop='togglePlaying'>
+            </i>
+          </progress-circle>
         </div>
         <div class='control'>
           <i class='icon-playlist'></i>
@@ -81,6 +83,7 @@
 	import {mapGetters, mapMutations} from 'vuex'
   import animations from 'create-keyframe-animation'
   import ProgressBar from 'base/progress-bar/progress-bar'
+  import ProgressCircle from 'base/progress-circle/progress-circle'
 
   import {prefixStyle} from 'common/js/dom'
   const transform = prefixStyle('transform')
@@ -89,7 +92,8 @@
     data() {
       return {
         songReady: false,
-        currentTime: 0
+        currentTime: 0,
+        radius: 32
       }
     },
     created() {
@@ -128,10 +132,17 @@
       },
       playing(newPlaying) {
         this.$nextTick(() => {
-					console.log('playing:', newPlaying)
+					console.log('percent:', this.percent)
           const audio = this.$refs.audio
           newPlaying ? audio.play() : audio.pause()
         })
+      },
+      fullScreen(newVal) {
+        setTimeout(() => {
+          if (newVal) {
+            this.$refs.progressBar.setProgressOffset(this.percent)
+          }
+        }, 20)
       }
     },
     methods: {
@@ -162,6 +173,12 @@
           len++
         }
         return num
+      },
+      onProgressBarChange(percent) {
+        this.$refs.audio.currentTime = percent * this.currentSong.duration
+        if (!this.playing) {
+          this.togglePlaying()
+        }
       },
       prev() {
         if (!this.songReady) {
@@ -259,7 +276,8 @@
       })
     },
     components: {
-      ProgressBar
+      ProgressBar,
+      ProgressCircle
     }
 	}
 </script>
