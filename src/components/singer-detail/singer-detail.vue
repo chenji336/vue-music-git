@@ -32,7 +32,11 @@
       },
       _normalizeSongs(list) {
         let ret = []
-        list.forEach((item) => {
+        list.forEach((item, index) => {
+          // 测试边界条件，只有一条歌曲
+          if (index > 0) {
+            // return
+          }
           let {musicData} = item
           if (musicData.songid && musicData.albummid) {
             ret.push(createSong(musicData))

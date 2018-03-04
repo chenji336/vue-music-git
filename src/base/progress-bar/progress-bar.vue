@@ -49,12 +49,15 @@
         this._trigglePercent()
       },
       progressClick(e) {
-        this._offset(e.offsetX)
+        // 当点击到progressBtn上面时候offsetX有问题
+        // this._offset(e.offsetX)
+        const rect = this.$refs.progressBar.getBoundingClientRect()
+        this._offset(e.pageX - rect.left)
         this._trigglePercent()
       },
       setProgressOffset(percent) {
         // !this.touch.initiated是为了防止在拖动的时候，歌曲也在进行动画操作
-        if (percent > 0 && !this.touch.initiated) {
+        if (percent >= 0 && !this.touch.initiated) {
           let barWidth = this.$refs.progressBar.clientWidth - progressBarWidth
           let offsetWidth = percent * barWidth
           this._offset(offsetWidth)

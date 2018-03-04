@@ -40,6 +40,31 @@ apiRouter.get('/getDiscList', (req, res) => {
     console.error(e)
   })
 })
+
+// getLyric
+apiRouter.get('/getLyric', (req, res) => {
+  var url = 'https://c.y.qq.com/lyric/fcgi-bin/fcg_query_lyric_new.fcg'
+  axios.get(url, {
+    headers: {
+      host: 'c.y.qq.com',
+      referer: 'https://c.y.qq.com'
+    },
+    params: req.query
+  }).then((response) => {
+    let ret = response.data
+    if (typeof response.data === 'string') {
+      let reg = /^\w+\(({[^()]+})\)$/
+      let matches = ret.match(reg)
+      if (matches) {
+        ret = JSON.parse(matches[1])
+      }
+    }
+    res.json(ret)
+  }).catch((e) => {
+    console.error(e)
+  })
+})
+
 app.use('/api', apiRouter)
 
 
