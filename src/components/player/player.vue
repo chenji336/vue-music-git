@@ -17,7 +17,7 @@
           <h1 class='title' v-html='currentSong.name'></h1>
           <h2 class='subtitle' v-html='currentSong.singer'></h2>
         </div>
-        <div class='middle' 
+        <div class='middle'
              @touchstart.prevent='middleTouchstart'
              @touchmove.prevent='middleTouchmove'
              @touchend.prevent='middleTouchend'
@@ -37,9 +37,9 @@
           <scroll class='middle-r' ref='lyricList' :data='currentLyric && currentLyric.lines'>
             <div class='lyric-wrapper'>
               <div v-if='currentLyric'>
-                <p class='text' 
+                <p class='text'
                    :class="{'current': index===currentLineNum}"
-                   ref='lyricLine' 
+                   ref='lyricLine'
                    v-for='(line,index) in currentLyric.lines'>{{line.txt}}
                 </p>
               </div>
@@ -186,7 +186,6 @@
       },
       playing(newPlaying) {
         this.$nextTick(() => {
-					console.log('percent:', this.percent)
           const audio = this.$refs.audio
           newPlaying ? audio.play() : audio.pause()
         })
@@ -229,7 +228,6 @@
         } else {
           list = this.sequenceList
         }
-        console.log('first:', list[0].name)
         this.resetCurrentIndex(list)
       },
       resetCurrentIndex(list) {
@@ -257,7 +255,6 @@
           if (this.playing) {
             this.currentLyric.play()
           }
-          console.log('this.currentLyric:', this.currentLyric)
         }).catch((e) => {
           this.currentLyric = null
           this.playingLyric = ''
@@ -394,7 +391,6 @@
         this.songReady = true
       },
       enter(el, done) {
-        console.log(this._getPosAndScale())
         let {x, y, scale} = this._getPosAndScale()
         let animation = {
           0: {

@@ -26,13 +26,13 @@ export default class Song {
 
   getLyric() {
     if (this.lyric) {
-      return
+      return Promise.resolve(this.lyric)
     }
     return new Promise((resolve, reject) => {
       getLyric(this.mid).then((res) => {
         if (res.retcode === ERR_OK) {
-         this.lyric = res.lyric
-         return resolve(Base64.decode(res.lyric))
+         this.lyric = Base64.decode(res.lyric)
+         return resolve(this.lyric)
         } else {
           reject('no lyric')
         }

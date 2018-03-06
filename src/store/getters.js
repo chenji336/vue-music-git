@@ -10,3 +10,7 @@ export const currentSong = (state) => {
 	console.log('currentSong:', state.playlist[state.currentIndex])
 	return state.playlist[state.currentIndex] || {}
 }
+
+export const disc = state => state.disc
+
+export const topList = state => state.topList

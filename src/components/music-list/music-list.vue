@@ -1,4 +1,4 @@
-﻿<template>
+<template>
   <div class='music-list'>
     <div class='back' @click='back'>
       <i class='icon-back'></i>
@@ -23,7 +23,7 @@
       ref='list'
     >
       <div class='song-list-wrapper'>
-        <song-list :songs='songs' @select='selectItem' ></song-list>
+        <song-list :songs='songs' :rank='rank' @select='selectItem' ></song-list>
       </div>
       <div class='loading-container' v-show='!songs.length'>
         <loading></loading>
@@ -60,6 +60,10 @@
       bgImage: {
         type: String,
         default: ''
+      },
+      rank: {
+        type: Boolean,
+        default: false
       }
     },
     data() {
@@ -76,7 +80,6 @@
       }
     },
     created() {
-      console.log('msic-list')
       this.probeType = 3
       this.listenScroll = true
     },

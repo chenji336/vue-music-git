@@ -13,3 +13,18 @@ export function shuffle(arr) {
   console.log('_arr:', _arr[0])
   return _arr
 }
+
+// 截流，不要每次都执行。
+// 没到delay时间，下次func又来的话，会清空在执行
+export function debounce(func, delay) {
+  let timer
+  // 函数柯里化
+  return function(...args) {
+    if (timer) {
+      clearTimeout(timer)
+    }
+    timer = setTimeout(() => {
+      func.apply(this, args)
+    }, delay)
+  }
+}
