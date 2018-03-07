@@ -6,12 +6,12 @@
           <h1 class='title'>
             <i class='icon'></i>
             <span class='text'></span>
-            <span class='clear'><i class='icon-clear'></i></span>
+            <span class='clear' @click='showConfirm'><i class='icon-clear'></i></span>
           </h1>
         </div>
         <scroll :data='sequenceList' class='list-content' ref='listContent'>
-          <ul>
-            <li ref='listItem' @click='selectItem(item,index)' class='item' v-for='(item,index) in sequenceList'>
+          <transition-group name='list' tag='ul'>
+            <li :key='item.id' ref='listItem' @click='selectItem(item,index)' class='item' v-for='(item,index) in sequenceList'>
               <i class='current' :class='getCurrentIcon(item)'></i>
               <span class='text'>{{item.name}}</span>
               <span class='like'>
@@ -21,7 +21,7 @@
                 <i class='icon-delete'></i>
               </span>
             </li>
-          </ul>
+          </transition-group>
         </scroll>
         <div class='list-operate'>
           <div class='add'>
@@ -33,6 +33,7 @@
           <span>关闭</span>
         </div>
       </div>
+      <confirm ref='confirm' @confirm='confirmClear' confirmBtnText='清空' text='是否清空播放列表' ></confirm>
     </div>
   </transition>
 </template>
@@ -41,6 +42,7 @@
   import {mapGetters, mapMutations, mapActions} from 'vuex'
   import Scroll from 'base/scroll/scroll'
   import {playMode} from 'common/js/config'
+  import Confirm from 'base/confirm/confirm'
 
   export default {
     data() {
@@ -65,6 +67,13 @@
       }
     },
     methods: {
+      showConfirm() {
+        this.$refs.confirm.show()
+      },
+      confirmClear() {
+        this.deleteSongList()
+        this.hide()
+      },
       show() {
         this.showFlag = true
         setTimeout(() => {
@@ -110,11 +119,13 @@
         setPlayingState: 'SET_PLAYING_STATE'
       }),
       ...mapActions([
-        'deleteSong'
+        'deleteSong',
+        'deleteSongList'
       ])
     },
     components: {
-      Scroll
+      Scroll,
+      Confirm
     }
   }
 </script>
