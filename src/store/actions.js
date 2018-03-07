@@ -1,6 +1,7 @@
 import * as types from './mutation-types'
 import {shuffle} from 'common/js/util'
 import {playMode} from 'common/js/config'
+import {saveSearch, deleteSearch, clearSearch} from 'common/js/cache'
 
 function findIndex (list, currentSong) {
 	let index = list.findIndex((item) => {
@@ -70,9 +71,52 @@ export const insertSong = function({commit, state}, song) {
     }
   }
 
+  console.log('currentIndex：', currentIndex)
   commit(types.SET_PLAYLIST, playlist)
   commit(types.SET_SEQUENCE_LIST, sequenceList)
   commit(types.SET_CURRENT_INDEX, currentIndex)
   commit(types.SET_PLAYING_STATE, true)
   commit(types.SET_FULL_SCREEN, true)
+}
+
+export const saveSearchHistory = function({commit}, query) {
+  commit(types.SET_SEARCH_HISTORY, saveSearch(query))
+}
+
+export const deleteSearchHistory = function({commit}, query) {
+  commit(types.SET_SEARCH_HISTORY, deleteSearch(query))
+}
+
+export const clearSearchHistory = function({commit}, query) {
+  commit(types.SET_SEARCH_HISTORY, clearSearch(query))
+}
+
+export const deleteSong = function({commit, state}, song) {
+  let playlist = state.playlist.slice()
+  let sequenceList = state.sequenceList.slice()
+  let currentIndex = state.currentIndex
+
+  let pIndex = playlist.findIndex((item) => {
+    return song.id === item.id
+  })
+  let sIndex = sequenceList.findIndex((item) => {
+    return song.id === item.id
+  })
+
+  if (currentIndex > pIndex || currentIndex === playlist.length) {
+    currentIndex--
+  }
+  playlist.splice(pIndex, 1)
+  sequenceList.splice(sIndex, 1)
+
+  commit(types.SET_PLAYLIST, playlist)
+  commit(types.SET_SEQUENCE_LIST, sequenceList)
+  commit(types.SET_CURRENT_INDEX, currentIndex)
+
+  if (playlist.length === 0) {
+    commit(types.SET_PLAYING_STATE, false)
+  } else {
+    commit(types.SET_PLAYING_STATE, true)
+  }
+  // 考虑边界值
 }

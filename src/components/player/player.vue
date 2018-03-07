@@ -94,11 +94,12 @@
             </i>
           </progress-circle>
         </div>
-        <div class='control'>
+        <div class='control' @click.stop='showPlaylist'>
           <i class='icon-playlist'></i>
         </div>
       </div>
     </transition>
+    <playlist ref='playlist'></playlist>
     <audio ref='audio' :src='currentSong.url' @playing='ready' @error='error' @timeupdate='updateTime' @ended='end'></audio>
 	</div>
 </template>
@@ -112,6 +113,7 @@
   import {shuffle} from 'common/js/util'
   import Lyric from 'lyric-parser'
   import Scroll from 'base/scroll/scroll'
+  import Playlist from 'components/playlist/playlist'
 
   import {prefixStyle} from 'common/js/dom'
   const transform = prefixStyle('transform')
@@ -168,6 +170,10 @@
 		},
     watch: {
       currentSong(newSong, oldSong) {
+        console.log(newSong.id)
+        if (!newSong.id) {
+          return
+        }
         if (newSong.id === oldSong.id) {
             return
         }
@@ -199,6 +205,9 @@
       }
     },
     methods: {
+      showPlaylist() {
+        this.$refs.playlist.show()
+      },
       back() {
         this.setFullScreen(false)
       },
@@ -454,7 +463,8 @@
     components: {
       ProgressBar,
       ProgressCircle,
-      Scroll
+      Scroll,
+      Playlist
     }
 	}
 </script>

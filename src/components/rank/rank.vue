@@ -37,9 +37,9 @@
     },
     created() {
       // increasing the load time
-      setTimeout(() => {
-        this._getTopList()
-      }, 1000)
+      // setTimeout(() => {
+      this._getTopList()
+      // }, 1000)
     },
     methods: {
       handlePlaylist(playlist) {
