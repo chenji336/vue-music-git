@@ -111,12 +111,14 @@ export const deleteSong = function({commit, state}, song) {
 
   commit(types.SET_PLAYLIST, playlist)
   commit(types.SET_SEQUENCE_LIST, sequenceList)
-  commit(types.SET_CURRENT_INDEX, currentIndex)
 
   if (playlist.length === 0) {
     commit(types.SET_PLAYING_STATE, false)
+    // 最后一首歌的时候，需要currentIndex - 1 ，相当于初始化为-1
+    commit(types.SET_CURRENT_INDEX, -1)
   } else {
     commit(types.SET_PLAYING_STATE, true)
+    commit(types.SET_CURRENT_INDEX, currentIndex)
   }
   // 考虑边界值
 }
