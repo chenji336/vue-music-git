@@ -86,6 +86,7 @@
     watch: {
       data() {
         setTimeout(() => {
+          console.log('data:', this.data)
           this.refresh()
         }, 20)
       }

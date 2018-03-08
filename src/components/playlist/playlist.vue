@@ -1,4 +1,4 @@
-﻿<template>
+<template>
   <transition name='list-fade'>
     <div class='playlist' v-show='showFlag' @click='hide'>
       <div class='list-wrapper' @click.stop>
@@ -24,9 +24,9 @@
           </transition-group>
         </scroll>
         <div class='list-operate'>
-          <div class='add'>
+          <div class='add' @click='addSong'>
             <i class='icon-add'></i>
-            <span class='text'>添加歌曲到列表</span>
+            <span class='text'>添加歌曲到队列</span>
           </div>
         </div>
         <div class='list-close' @click='hide'>
@@ -34,6 +34,7 @@
         </div>
       </div>
       <confirm ref='confirm' @confirm='confirmClear' confirmBtnText='清空' text='是否清空播放列表' ></confirm>
+      <add-song ref='addSong'></add-song>
     </div>
   </transition>
 </template>
@@ -44,6 +45,7 @@
   import {playMode} from 'common/js/config'
   import Confirm from 'base/confirm/confirm'
   import {playerMixin} from 'common/js/mixin'
+  import AddSong from 'components/add-song/add-song'
 
   export default {
     mixins: [playerMixin],
@@ -72,6 +74,9 @@
       }
     },
     methods: {
+      addSong() {
+        this.$refs.addSong.show()
+      },
       showConfirm() {
         this.$refs.confirm.show()
       },
@@ -130,7 +135,8 @@
     },
     components: {
       Scroll,
-      Confirm
+      Confirm,
+      AddSong
     }
   }
 </script>
