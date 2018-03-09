@@ -72,7 +72,7 @@
               <i @click='next' class='icon-next'></i>
             </div>
             <div class='icon i-right'>
-              <i class='icon icon-favorite'></i>
+              <i class='icon' :class='getFavoriteIcon(currentSong)' @click='toggleFavorite(currentSong)'></i>
             </div>
           </div>
         </div>
@@ -167,7 +167,6 @@
 		},
     watch: {
       currentSong(newSong, oldSong) {
-        console.log(newSong.id)
         if (!newSong.id) {
           return
         }
@@ -182,7 +181,8 @@
         }
         // 解决微信后台播放完成之后切换前台不执行问题
         // nextTick =>  setTimeout()
-        setTimeout(() => {
+        clearTimeout(this.timer)
+        this.timer = setTimeout(() => {
           this.getLyric()
           this.$refs.audio.play()
         }, 1000)
@@ -237,6 +237,9 @@
       },
       getLyric(lyric) {
         this.currentSong.getLyric().then((lyric) => {
+          if (this.currentSong.lyric !== lyric) {
+            return
+          }
           this.currentLyric = new Lyric(lyric, this.handleLyric)
           if (this.playing) {
             this.currentLyric.play()

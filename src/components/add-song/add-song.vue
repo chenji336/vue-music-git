@@ -1,4 +1,4 @@
-﻿<template>
+<template>
   <transition name='slide'>
     <div class='add-song' v-show='showFlag' @click.stop>
       <div class='header'>
@@ -8,7 +8,7 @@
         </div>
       </div>
       <div class='search-box-wrapper'>
-        <search-box placeholder='搜索歌曲' @query='onQueryChange' ref='searchBox'></search-box>
+        <search-box placeholder='搜索歌曲' @query='searchSong' ref='searchBox'></search-box>
       </div>
       <div class='shortcut' v-show='!query'>
         <switches :switches='switches' @switch='switchItem' :currentIndex='currentIndex'></switches>
@@ -18,7 +18,7 @@
               <song-list :songs='playHistory' @select='selectItem'></song-list>
             </div>
           </scroll>
-          <scroll ref='searchList' class='list-scroll' v-if='currentIndex===1' :data='searchHistory'>
+          <scroll :refreshDelay='refreshDelay' ref='searchList' class='list-scroll' v-if='currentIndex===1' :data='searchHistory'>
             <div class='list-inner'>
               <search-list :searches='searchHistory' @select='addQuery' @delete='deleteSearchHistory'></search-list>
             </div>
@@ -93,6 +93,13 @@
       selectSearch() {
         this.saveSearch()
         this.$refs.topTip.show()
+      },
+      searchSong(query) {
+        this.onQueryChange(query)
+        setTimeout(() => {
+          this.$refs.songList && this.$refs.songList.refresh()
+          this.$refs.searchList && this.$refs.searchList.refresh()
+        }, 20)
       },
       ...mapActions([
         'insertSong'

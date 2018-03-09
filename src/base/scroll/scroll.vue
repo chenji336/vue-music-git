@@ -31,6 +31,10 @@
       beforeScroll: {
         type: Boolean,
         default: false
+      },
+      refreshDelay: {
+        type: Number,
+        default: 20
       }
     },
     mounted() {
@@ -86,9 +90,8 @@
     watch: {
       data() {
         setTimeout(() => {
-          console.log('data:', this.data)
           this.refresh()
-        }, 20)
+        }, this.refreshDelay)
       }
     }
   }

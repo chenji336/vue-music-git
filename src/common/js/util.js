@@ -10,7 +10,6 @@ export function shuffle(arr) {
     _arr[i] = _arr[j]
     _arr[j] = temp
   }
-  console.log('_arr:', _arr[0])
   return _arr
 }
 
