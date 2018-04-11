@@ -40,6 +40,7 @@
   import {mapActions} from 'vuex'
   import {playlistMixin} from 'common/js/mixin'
 
+  // 保留高度是最上面不会遮挡的部分
   const RESERVED_HEIGHT = 40
   const transform = prefixStyle('transform')
   const backdrop = prefixStyle('backdrop-filter')
